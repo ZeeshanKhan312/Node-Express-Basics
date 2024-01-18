@@ -1,0 +1,20 @@
+{
+  "name": "node_js_projects",
+  "version": "1.0.0",
+  "description": "basic project for learning Node.js",
+  "main": "./NodeJS/fs-module.js",
+  "scripts": {
+    "start": "nodemon path-module.js",
+    "dev": "nodemon path-module.js"
+  },
+  "author": "zeeshan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
