@@ -35,6 +35,7 @@ app.get('/data/v1/search',(req,res)=>{
     res.status(200).json(peopleArray);
 })
 
+//call to any other url link will be matched to this
 app.get('*',(req,res)=>{
     res.status(404);
     res.send(`h1>OOPS..!</h1>

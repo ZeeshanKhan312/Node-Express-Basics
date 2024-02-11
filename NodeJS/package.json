@@ -1,5 +1,5 @@
 {
-  "name": "node_js_projects",
+  "name": "nodejs",
   "version": "1.0.0",
   "description": "basic project for learning Node.js",
   "main": "./NodeJS/fs-module.js",
