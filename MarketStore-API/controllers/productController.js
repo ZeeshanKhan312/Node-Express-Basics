@@ -29,6 +29,28 @@ const filterProduct=async(req,res)=>{
         filterObject.name= {$regex:name,$options:'i'}
     }
 
+    if(numericFilters){
+        const operatorMap={
+            '>':'$gt',
+            '>=':'$gte',
+            '=':'$eq',
+            '<':'$lt',
+            '<=':'$lte'
+        }
+
+        const regEx= /\b(<|>|>=|=|<|<=)\b/g
+
+        let filter=numericFilters.replace(regEx,(match)=>`-${operatorMap[match]}-`); //replace the > to $gt and so on...
+
+        const option=['price','rating'];
+        filter=filter.split(',').forEach((item)=>{
+            const [field,opr,value]=item.split('-');
+            if(option.includes(field))
+                filterObject[field]={[opr]:Number(value)}
+        });
+        
+    }
+
     let productList= product.find(filterObject);
     //only selecting the required fields of data
     if(fields){
@@ -41,18 +63,6 @@ const filterProduct=async(req,res)=>{
         productList=productList.sort(sortList)
     }
 
-    if(numericFilters){
-        const operatorMap={
-            '>':'&gt',
-            '>=':'&gte',
-            '=':'&eq',
-            '<':'&lt',
-            '<=':'&lte'
-        }
-
-        const regEx= /\b(<|>|>=|=|<|<=)\b/g
-        
-    }
     //page implementation
     const page=req.query.page;
     const limit=5;
@@ -82,4 +92,29 @@ const getProductOverview=async (req,res)=>{
     });
 }
 
-module.exports={getAllProducts,filterProduct,getProductOverview};
+const addProduct =async(req,res)=>{
+    const newProduct=await product.create(req.body);
+    res.status(201).json(newProduct);
+}
+
+const deleteProduct =async(req,res)=>{
+    const item=await product.findOneAndDelete({_id:req.params.id});
+    if(item){
+        res.status(200).json({msg:`product deleted with ${req.params.id}`})
+    }
+    else
+        res.status(400).json({msg:`No product found with ID: ${req.params.id}`})
+}
+
+const getSingleProduct=async(req,res)=>{
+    const item=await product.findOne({_id:req.params.id});
+    if(item){
+        res.status(200).json(item);
+    }
+    else{
+        res.status(400).json({msg:`No product found with ID: ${req.params.id}`})
+    }
+}
+
+module.exports={getAllProducts,filterProduct,getProductOverview,
+                addProduct,deleteProduct,getSingleProduct};
